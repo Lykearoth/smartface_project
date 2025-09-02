@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <style>
+    body {
+        background: #1a202c;
+        color: #e2e8f0;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+    }
+    .navbar {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        background: #2d3748;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .logo-title-group {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        gap: 20px;
+    }
+    .menu-toggle {
+        margin-right: auto;
+    }
+    .logo img {
+        height: 50px;
+        width: auto;
+    }
+     .sidebar {
+            position: fixed;
+            top: 60px;
+            left: -300px;
+            height: calc(100vh - 60px);
+            width: 300px;
+            background: #2d3748;
+            padding-top: 20px;
+            transition: left 0.3s ease;
+            z-index: 999;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #a0aec0;
+            display: block;
+            transition: all 0.3s ease;
+        }
+        .sidebar a:hover {
+            color: #ffffff;
+            background: #4a5568;
+        }
+        
+    .navbar-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #e2e8f0;
+        flex-grow: 1;
+        text-align: center;
+    }
+    .user-profile {
+        position: relative;
+        margin-left: auto;
+    }
+    .user-profile .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .user-profile .dropdown-content {
+        display: none;
+        position: absolute;
+        background: #2d3748;
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border-radius: 5px;
+        right: 0;
+        top: 100%;
+    }
+    .user-profile .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    .user-profile .dropdown-content a {
+        color: #e2e8f0;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+    .user-profile .dropdown-content a:hover {
+        background: #4a5568;
+    }
+    .user-profile .btn {
+        color: #e2e8f0;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .user-profile .btn:hover {
+        background: #718096;
+    }
+    .content {
+            padding: 20px;
+            margin-top: 60px;
+            transition: transform 0.3s ease; /* Add transition for smooth motion */
+    }
+    .content.shifted {
+            transform: translateX(285px); /* Shift content when sidebar is active */
+    }
+    .card {
+        background: #2d3748;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+      .menu-toggle {
+            margin-right: auto;
+             font-size: 24px;
+            color: #a0aec0;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+         .menu-toggle:hover {
+            color: #ffffff;
+        }
+        
+    .table-container {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: auto;
+        position: relative;
+    }
+    table thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #4a5568;
+    }
+    .table-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    .table-container::-webkit-scrollbar-track {
+        background: #2d3748;
+    }
+    .table-container::-webkit-scrollbar-thumb {
+        background: #718096;
+        border-radius: 4px;
+    }
+    .table-container::-webkit-scrollbar-thumb:hover {
+        background: #a0aec0;
+    }
+    .btn {
+        padding: 8px 12px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+    .profile-section {
+        position: relative; 
+    margin-bottom: 20px;
+    min-height: 400px;
+    }
+    .cover-photo-area {
+        width: 100%;
+        height: 100%;
+        min-height: 300px;
+        background: linear-gradient(to bottom, #d1d5db, #a0aec0);
+        position: relative;
+        border-radius: 10px 10px 0 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .cover-photo-area.has-cover {
+        background: none;
+    }
+    .cover-photo-area img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+    top: 0;
+    left: 0;
+    }
+    
+    .cover-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .cover-photo-area:hover .cover-actions {
+        opacity: 1;
+    }
+    .add-cover-photo, .update-cover-photo, .delete-cover-photo {
+        display: inline-block;
+        margin-left: 10px;
+    }
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        position: absolute;
+        bottom: -50px;
+        left: 20px;
+        border: 5px solid #2a3b81;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+    }
+    .profile-picture:hover {
+        transform: scale(1.05);
+    }
+.camera-overlay {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background: rgba(74, 85, 104, 0.8);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    z-index: 10; /* Ensure it stays above the profile picture */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for better integration */
+}
+.camera-overlay:hover {
+    background: rgba(113, 128, 150, 0.9);
+    transform: scale(1.1);
+}
+    .name-followers {
+        margin-top: 90px;
+        padding-left: 180px;
+    }
+    .error {
+        color: #ef4444;
+        display: none;
+        font-size: 0.875rem;
+    }
+    .loading {
+        color: #a0aec0;
+        font-size: 0.875rem;
+        display: none;
+    }
+    /* Updated dropdown styles for table actions */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background: #2d3748; /* Match navbar background */
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border-radius: 5px;
+        left: 0;
+        top: 100%; /* Aligns to bottom of button */
+        transform: translateY(0); /* Removes any offset */
+        margin-top: 0; /* Eliminates gap */
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    .dropdown-content a {
+        color: #e2e8f0;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+    .dropdown-content a:hover {
+        background: #4a5568; /* Match focus/hover color */
+    }
+    #setting {
+        margin-top: 70px; /* Increase this value to push the settings card lower */
+    }
+    
+    @media (max-width: 768px) {
+        .navbar { flex-direction: column; padding: 10px; }
+        .logo-title-group { position: static; transform: none; flex-direction: column; gap: 10px; margin: 10px 0; }
+        .menu-toggle { margin-left: 0; margin-bottom: 10px; }
+        .navbar-title { margin: 10px 0; }
+        .user-profile { margin-top: 10px; }
+        .cover-photo-area { height: 200px; }
+        .profile-picture { width: 100px; height: 100px; bottom: -50px; left: 10px; }
+        .camera-overlay { width: 25px; height: 25px; }
+        .name-followers { margin-top: 60px; padding-left: 120px; }
+    }
+     footer {
+            background-color: #1f2937; /* Tailwind bg-gray-800 */
+            color: #d1d5db; /* Tailwind text-gray-300 */
+            padding: 1.5rem 0;
+            margin-top: 2rem; /* Gap from #all-attendance */
+            width: 100%;
+            text-align: center;
+        }
+        footer .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem; /* Increased gap for logo elements */
+            margin-bottom: 1rem;
+        }
+        footer .logo-container img {
+            height: 2.5rem; /* Adjust logo image size */
+            width: auto;
+        }
+        footer .logo-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        footer .footer-content a {
+            color: #60a5fa; /* Tailwind text-blue-400 */
+            margin: 0 0.5rem;
+            text-decoration: none;
+        }
+        footer .footer-content a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            footer .logo-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            footer .footer-content a {
+                display: block;
+                margin: 0.25rem 0;
+            }
+        }
+</style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo-title-group">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="NUM Logo">
+            </div>
+            <div class="navbar-title" style="font-family: 'Battambang', 'Noto Sans Khmer', sans-serif; font-size: 25px;">វិទ្យាល័យជ្រោះប៊ូស្រា</div>
+        </div>
+       <div class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+    <div class="user-profile" id="user-profile">
+        <div class="dropdown relative">
+            <button class="btn flex items-center focus:outline-none" id="user-dropdown-btn">
+                <img id="profile-avatar" src="/api/profile/image" alt="Profile Avatar" class="w-10 h-10 rounded-full mr-2" onerror="this.src='/static/images/profile_images/default_profile.jpg'; this.onerror=null;">
+                <span class="text-white font-bold mr-2" id="user-name">{{ current_user.id if current_user.is_authenticated else 'Guest' }}</span>
+                <i class="fas fa-chevron-down ml-1"></i>
+            </button>
+            <div class="dropdown-content absolute right-0 top-100 translate-y-0 hidden bg-gray-800 text-white rounded-lg shadow-lg z-10 w-48" id="user-dropdown-content">
+                <a href="/setting" class="block px-4 py-2 hover:bg-gray-700 focus:bg-gray-700" tabindex="0"><i class="fas fa-cog mr-2"></i>Settings</a>
+                <a href="/logout" class="block px-4 py-2 hover:bg-gray-700 focus:bg-gray-700" tabindex="0"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+  <div class="container">
+        <div class="sidebar" id="sidebar">
+            <a href="{{ url_for('index') }}"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a>
+            <a href="{{ url_for('index') }}#dashboard"><i class="fas fa-calendar-day mr-2"></i>Today Attendance</a>
+            <a href="{{ url_for('index') }}#all-employees"><i class="fas fa-users mr-2"></i>All Employees</a>
+            <a href="{{ url_for('index') }}#all-attendance"><i class="fas fa-calendar-alt mr-2"></i>All Attendance</a>
+            <a href="/today_attendance"><i class="fas fa-user-check mr-2"></i>User Attendance</a>
+            <a href="/setting"><i class="fas fa-cog mr-2"></i>Settings</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+        </div>
+    <div class="content">
+        <div class="profile-section card">
+            <div id="cover-photo-area" class="cover-photo-area" style="background-image: url('/api/profile/cover');">
+                <div class="cover-actions">
+                    <div class="add-cover-photo">
+                        <input type="file" id="cover-upload" accept="image/*" class="hidden">
+                        <!-- <button onclick="document.getElementById('cover-upload').click(); uploadCover('create')" class="bg-blue-600 text-white btn">Add Cover</button> -->
+                                                 <button onclick="document.getElementById('cover-upload').click(); uploadCover('create')" class=""></button>
+                    </div>
+                    <div class="update-cover-photo hidden">
+                        <input type="file" id="cover-update-upload" accept="image/*" class="hidden">
+                        <button onclick="document.getElementById('cover-update-upload').click(); uploadCover('update')" class="bg-yellow-600 text-white btn">Update Cover</button>
+                        <button onclick="deleteCover()" class="bg-red-600 text-white btn ml-2">Delete Cover</button>
+                    </div>
+                </div>
+                <img id="cover-image" src="/api/profile/cover" alt="Cover Photo" class="hidden">
+            </div>
+            <img id="profile-image" src="/api/profile/image" alt="Profile Picture" class="profile-picture" onerror="this.src='/static/images/profile_images/default_profile.jpg'; this.onerror=null;">
+            <div id="camera-overlay" class="camera-overlay" onclick="document.getElementById('profile-upload').click(); uploadProfile('create');">
+                <i class="fas fa-camera text-white"></i>
+            </div>
+            <input type="file" id="profile-upload" accept="image/*" class="hidden">
+            <div class="name-followers">
+                <h2 class="text-2xl font-bold">{{ current_user.id }}</h2>
+            </div>
+            <p id="profile-error" class="error mt-2"></p>
+            <p id="profile-loading" class="loading mt-2">Uploading...</p>
+        </div>
+        <div id="setting" class="card mb-6">
+            <h2 class="text-xl font-semibold mb-4"><i class="fas fa-cog mr-2"></i>Settings</h2>
+            <div class="space-y-6">
+                <h3 class="text-lg font-semibold"><i class="fas fa-user-cog mr-2"></i>User Management</h3>
+                <div class="mb-6">
+                    <h4 class="text-md font-semibold mb-2"><i class="fas fa-user-plus mr-2"></i>Add New User</h4>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <div class="mb-4">
+                            <label for="new-username" class="block text-sm font-medium">Username</label>
+                            <input type="text" id="new-username" class="w-full p-2 rounded-lg border border-gray-600 bg-gray-800 text-white" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="new-password" class="block text-sm font-medium">Password</label>
+                            <input type="password" id="new-password" class="w-full p-2 rounded-lg border border-gray-600 bg-gray-800 text-white" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="new-is-admin" class="flex items-center">
+                                <input type="checkbox" id="new-is-admin" class="mr-2">
+                                <span>Is Admin</span>
+                            </label>
+                        </div>
+                        <button onclick="addUser()" class="bg-blue-600 text-white btn"><i class="fas fa-user-plus mr-2"></i>Add User</button>
+                        <p id="add-user-error" class="error mt-2"></p>
+                        <p id="add-user-loading" class="loading mt-2">Adding user...</p>
+                    </div>
+                </div>
+                <h4 class="text-md font-semibold mb-2"><i class="fas fa-users mr-2"></i>Users</h4>
+                <p id="users-loading" class="loading">Loading users...</p>
+                <p id="users-error" class="error"></p>
+                <div class="table-container">
+                    <table id="userTable" class="w-full bg-gray-700 rounded-lg">
+                        <thead>
+                            <tr class="border-b border-gray-600">
+                                <th class="p-2 text-left">Username</th>
+                                <th class="p-2 text-left">Admin</th>
+                                <th class="p-2 text-left">Face Registered</th>
+                                <th class="p-2 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+     function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const content = document.querySelector('.content');
+            if (sidebar && content) {
+                sidebar.classList.toggle('active');
+                content.classList.toggle('shifted');
+                // Add body motion by toggling a class
+                document.body.classList.toggle('sidebar-open');
+            }
+        }
+
+        function uploadProfile(action) {
+            const fileInput = document.getElementById('profile-upload');
+            const file = fileInput.files[0];
+            if (file) {
+                document.getElementById('profile-loading').style.display = 'block';
+                document.getElementById('profile-error').style.display = 'none';
+                const formData = new FormData();
+                formData.append('profile_image', file);
+                let url = '/api/upload/profile';
+                if (action === 'update') {
+                    url = '/api/update/profile';
+                }
+                fetch(url, {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                  .then(data => {
+                      document.getElementById('profile-loading').style.display = 'none';
+                      if (data.status === 'success') {
+                          document.getElementById('profile-image').src = data.url || '/static/images/profile_images/default_profile.jpg';
+                          if (action === 'create') {
+                              document.getElementById('camera-overlay').onclick = () => { document.getElementById('profile-upload').click(); uploadProfile('update'); };
+                              document.getElementById('camera-overlay').innerHTML = '<i class="fas fa-edit text-white"></i>';
+                          }
+                      } else {
+                          document.getElementById('profile-error').textContent = data.message || `Error ${action === 'update' ? 'updating' : 'uploading'} profile image`;
+                          document.getElementById('profile-error').style.display = 'block';
+                      }
+                  }).catch(error => {
+                      console.error('Network error:', error);
+                      document.getElementById('profile-loading').style.display = 'none';
+                      document.getElementById('profile-error').textContent = 'Network error';
+                      document.getElementById('profile-error').style.display = 'block';
+                  });
+            }
+        }
+
+        function deleteProfile() {
+            if (confirm('Are you sure you want to delete your profile image?')) {
+                document.getElementById('profile-loading').style.display = 'block';
+                document.getElementById('profile-error').style.display = 'none';
+                fetch('/api/delete/profile', {
+                    method: 'DELETE'
+                }).then(response => response.json())
+                  .then(data => {
+                      document.getElementById('profile-loading').style.display = 'none';
+                      if (data.status === 'success') {
+                          document.getElementById('profile-image').src = '/static/images/profile_images/default_profile.jpg';
+                          document.getElementById('camera-overlay').onclick = () => { document.getElementById('profile-upload').click(); uploadProfile('create'); };
+                          document.getElementById('camera-overlay').innerHTML = '<i class="fas fa-camera text-white"></i>';
+                      } else {
+                          document.getElementById('profile-error').textContent = data.message || 'Error deleting profile image';
+                          document.getElementById('profile-error').style.display = 'block';
+                      }
+                  }).catch(error => {
+                      document.getElementById('profile-loading').style.display = 'none';
+                      document.getElementById('profile-error').textContent = 'Network error';
+                      document.getElementById('profile-error').style.display = 'block';
+                      console.error('Error:', error);
+                  });
+            }
+        }
+
+        function uploadCover(action) {
+            const fileInput = action === 'create' ? document.getElementById('cover-upload') : document.getElementById('cover-update-upload');
+            const file = fileInput.files[0];
+            if (file) {
+                document.getElementById('profile-loading').style.display = 'block';
+                document.getElementById('profile-error').style.display = 'none';
+                const formData = new FormData();
+                formData.append('cover_image', file);
+                let url = '/api/upload/cover';
+                if (action === 'update') {
+                    url = '/api/update/cover';
+                }
+                fetch(url, {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                  .then(data => {
+                      document.getElementById('profile-loading').style.display = 'none';
+                      if (data.status === 'success') {
+                          const coverArea = document.getElementById('cover-photo-area');
+                          coverArea.style.backgroundImage = `url(${data.url || '/static/images/cover_images/default_cover.jpg'})`;
+                          coverArea.classList.add('has-cover');
+                          document.getElementById('cover-image').src = data.url || '/static/images/cover_images/default_cover.jpg';
+                          document.querySelector('.add-cover-photo').classList.add('hidden');
+                          document.querySelector('.update-cover-photo').classList.remove('hidden');
+                      } else {
+                          document.getElementById('profile-error').textContent = data.message || `Error ${action === 'update' ? 'updating' : 'uploading'} cover image`;
+                          document.getElementById('profile-error').style.display = 'block';
+                      }
+                  }).catch(error => {
+                      console.error('Network error:', error);
+                      document.getElementById('profile-loading').style.display = 'none';
+                      document.getElementById('profile-error').textContent = 'Network error';
+                      document.getElementById('profile-error').style.display = 'block';
+                  });
+            }
+        }
+
+        function deleteCover() {
+            if (confirm('Are you sure you want to delete your cover photo?')) {
+                document.getElementById('profile-loading').style.display = 'block';
+                document.getElementById('profile-error').style.display = 'none';
+                fetch('/api/delete/cover', {
+                    method: 'DELETE'
+                }).then(response => response.json())
+                  .then(data => {
+                      document.getElementById('profile-loading').style.display = 'none';
+                      if (data.status === 'success') {
+                          const coverArea = document.getElementById('cover-photo-area');
+                          coverArea.style.backgroundImage = 'none';
+                          coverArea.style.background = 'linear-gradient(to bottom, #d1d5db, #a0aec0)';
+                          coverArea.classList.remove('has-cover');
+                          document.querySelector('.update-cover-photo').classList.add('hidden');
+                          document.querySelector('.add-cover-photo').classList.remove('hidden');
+                      } else {
+                          document.getElementById('profile-error').textContent = data.message || 'Error deleting cover image';
+                          document.getElementById('profile-error').style.display = 'block';
+                      }
+                  }).catch(error => {
+                      document.getElementById('profile-loading').style.display = 'none';
+                      document.getElementById('profile-error').textContent = 'Network error';
+                      document.getElementById('profile-error').style.display = 'block';
+                      console.error('Error:', error);
+                  });
+            }
+        }
+
+        function addUser() {
+            const username = document.getElementById('new-username').value.trim();
+            const password = document.getElementById('new-password').value;
+            const isAdmin = document.getElementById('new-is-admin').checked;
+            const errorElement = document.getElementById('add-user-error');
+            const loadingElement = document.getElementById('add-user-loading');
+            errorElement.style.display = 'none';
+            loadingElement.style.display = 'block';
+            if (!username || !password) {
+                errorElement.textContent = 'Please enter both username and password';
+                errorElement.style.display = 'block';
+                loadingElement.style.display = 'none';
+                return;
+            }
+            fetch('/api/user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ username, password, is_admin: isAdmin })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loadingElement.style.display = 'none';
+                    if (data.error) {
+                        errorElement.textContent = data.error;
+                        errorElement.style.display = 'block';
+                    } else {
+                        document.getElementById('new-username').value = '';
+                        document.getElementById('new-password').value = '';
+                        document.getElementById('new-is-admin').checked = false;
+                        fetchUsers();
+                        alert('User created successfully');
+                    }
+                })
+                .catch(error => {
+                    loadingElement.style.display = 'none';
+                    errorElement.textContent = 'Error adding user';
+                    errorElement.style.display = 'block';
+                    console.error('Add user error:', error);
+                });
+        }
+
+   function fetchUsers() {
+    const tbody = document.getElementById('userTableBody');
+    const loading = document.getElementById('users-loading');
+    const error = document.getElementById('users-error');
+    loading.style.display = 'block';
+    error.style.display = 'none';
+    tbody.innerHTML = '';
+    fetch('/api/users', { credentials: 'include' })
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            loading.style.display = 'none';
+            if (data.users && Array.isArray(data.users)) {
+                data.users.forEach(user => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-2">${user.username || 'No Username'}</td>
+                        <td class="p-2">${user.is_admin ? 'Yes' : 'No'}</td>
+                        <td class="p-2">${user.has_face ? 'Yes' : 'No'}</td>
+                        <td class="p-2 relative">
+                            <div class="dropdown">
+                                <button class="bg-gray-600 text-white btn flex items-center w-full justify-between px-2 py-1 focus:outline-none" aria-label="Actions for ${user.username || 'No Username'}">
+                                    Actions <span class="fas fa-chevron-down ml-1"></span>
+                                </button>
+                                <div class="dropdown-content absolute left-0 top-full translate-y-0 hidden bg-gray-800 text-white rounded-lg shadow-lg z-10 w-48">
+                                    <a href="#" onclick="promoteUser('${user.username || ''}')" class="block px-4 py-2 hover:bg-gray-700 focus:bg-gray-700" tabindex="0"><i class="fas fa-user-shield mr-2"></i>${user.is_admin ? 'Demote' : 'Promote'}</a>
+                                    <a href="#" onclick="resetPassword('${user.username || ''}')" class="block px-4 py-2 hover:bg-gray-700 focus:bg-gray-700" tabindex="0"><i class="fas fa-key mr-2"></i>Reset Password</a>
+                                    <a href="#" onclick="registerUserFace('${user.username || ''}')" class="block px-4 py-2 hover:bg-gray-700 focus:bg-gray-700" tabindex="0"><i class="fas fa-camera mr-2"></i>Register Face</a>
+                                    <a href="#" onclick="updatePassword('${user.username || ''}')" class="block px-4 py-2 hover:bg-gray-700 focus:bg-gray-700" tabindex="0"><i class="fas fa-lock mr-2"></i>Update Password</a>
+                                    <a href="#" onclick="deleteUser('${user.username || ''}')" class="block px-4 py-2 hover:bg-gray-700 focus:bg-gray-700" tabindex="0"><i class="fas fa-trash mr-2"></i>Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="4">No users found</td></tr>';
+            }
+        })
+        .catch(error => {
+            loading.style.display = 'none';
+            error.style.display = 'block';
+            error.textContent = error.message.includes('403') ? 'You must be an admin to view users.' : 'Error loading users';
+            console.error('Error fetching users:', error);
+        });
+}
+        function promoteUser(username) {
+            const loading = document.getElementById('users-loading');
+            loading.style.display = 'block';
+            fetch(`/api/user/${username}/promote`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        fetchUsers();
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    loading.style.display = 'none';
+                    console.error('Promote user error:', error);
+                    alert('Error promoting user');
+                });
+        }
+
+        function resetPassword(username) {
+            if (confirm(`Reset password for ${username} to TempPass123?`)) {
+                const loading = document.getElementById('users-loading');
+                loading.style.display = 'block';
+                fetch(`/api/user/${username}/reset-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    loading.style.display = 'none';
+                    console.error('Reset password error:', error);
+                    alert('Error resetting password');
+                });
+            }
+        }
+
+        function updatePassword(username) {
+            const newPassword = prompt(`Enter new password for ${username}:`);
+            if (!newPassword) {
+                alert('Password cannot be empty');
+                return;
+            }
+            const loading = document.getElementById('users-loading');
+            loading.style.display = 'block';
+            fetch(`/api/user/${username}/update-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ new_password: newPassword })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    loading.style.display = 'none';
+                    console.error('Update password error:', error);
+                    alert('Error updating password');
+                });
+        }
+
+        function deleteUser(username) {
+            if (confirm(`Delete user ${username}? This will also remove their face data.`)) {
+                const loading = document.getElementById('users-loading');
+                loading.style.display = 'block';
+                fetch(`/api/user/${username}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        fetchUsers();
+                        alert('User deleted successfully');
+                    }
+                })
+                .catch(error => {
+                    loading.style.display = 'none';
+                    console.error('Delete user error:', error);
+                    alert('Error deleting user');
+                });
+            }
+        }
+
+        function registerUserFace(username) {
+            if (confirm(`Register face for ${username}?`)) {
+                const loading = document.getElementById('users-loading');
+                loading.style.display = 'block';
+                fetch(`/api/user/register_face/${username}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        fetchUsers();
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    loading.style.display = 'none';
+                    console.error('Error registering face:', error);
+                    alert('Error registering face');
+                });
+            }
+        }
+        
+ document.addEventListener('DOMContentLoaded', function() {
+        const dropdownBtn = document.getElementById('user-dropdown-btn');
+        const dropdownContent = document.getElementById('user-dropdown-content');
+
+        // Toggle dropdown on click
+        dropdownBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            dropdownContent.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!dropdownBtn.contains(e.target) && !dropdownContent.contains(e.target)) {
+                dropdownContent.classList.add('hidden');
+            }
+        });
+
+        // Ensure dropdown items are keyboard-accessible
+        const dropdownLinks = dropdownContent.querySelectorAll('a');
+        dropdownLinks.forEach(link => {
+            link.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    window.location.href = this.href;
+                }
+            });
+        });
+    });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchUsers();
+            const coverArea = document.getElementById('cover-photo-area');
+            const coverImage = document.getElementById('cover-image');
+            coverImage.onerror = () => {
+                coverImage.classList.add('hidden');
+                coverArea.classList.remove('has-cover');
+                coverArea.style.background = 'linear-gradient(to bottom, #d1d5db, #a0aec0)';
+            };
+        });
+    </script>
+</body>
+ <footer>
+            <div class="logo-container">
+                  <img src="{{ url_for('static', filename='images/logo.png') }}" alt="NUM Logo">
+                <span class="logo-text" style=" font-family: 'Battambang', 'Noto Sans Khmer', sans-serif";>វិទ្យាល័យជ្រោះប៊ូស្រា</span>
+            </div>
+            <div class="footer-content">
+                <p>
+                    <a href="#dashboard"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a> |
+                    <a href="#dashboard"><i class="fas fa-calendar-day mr-2"></i>Today Attendance</a> |
+                    <a href="#all-employees"><i class="fas fa-user-tie mr-2"></i>All Employees</a> |
+                    <a href="#all-attendance"><i class="fas fa-calendar-alt mr-2"></i>All Attendance</a> |
+                    <a href="/today_attendance"><i class="fas fa-user-check mr-2"></i>User Attendance</a> |
+                    <a href="/setting"><i class="fas fa-cog mr-2"></i>Settings</a>
+                </p>
+                  <p>&copy; Smart Face-Based Attendance System | NUM · Faculty of Information Technology | GEN 30th, Academic Years 2022-2025. All rights reserved.</p>
+            </div>
+        </footer>
+</html>

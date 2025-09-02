@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Attendance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+        body {
+            background: #1a202c;
+            color: #e2e8f0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: #2d3748;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .btn {
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .error {
+            color: #ef4444;
+            display: none;
+        }
+        .loading {
+            display: none;
+            color: #10b981;
+        }
+        #videoCanvas {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            margin: 10px auto;
+            display: none;
+            border: 2px solid #10b981;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="text-2xl font-bold mb-4 text-center">Smart Face-Based Attendance System</h1>
+        <form method="POST" action="/login">
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium">Username</label>
+                <input type="text" id="username" name="username" class="w-full p-2 rounded-lg border border-gray-600 bg-gray-700 text-white" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium">Password</label>
+                <input type="password" id="password" name="password" class="w-full p-2 rounded-lg border border-gray-600 bg-gray-700 text-white" required>
+            </div>
+            <button type="submit" class="bg-blue-600 text-white btn w-full">Login</button>
+        </form>
+        <div class="mt-4">
+            <button onclick="loginWithFace()" class="bg-green-600 text-white btn w-full">Login with Face</button>
+        </div>
+        <canvas id="videoCanvas"></canvas>
+        <p id="error" class="error mt-2 text-center"></p>
+        <p id="loading" class="loading mt-2 text-center">Scanning face, please wait...</p>
+    </div>
+
+    <script>
+        const socket = io('http://127.0.0.1:5000');
+        const canvas = document.getElementById('videoCanvas');
+        const ctx = canvas.getContext('2d');
+
+        socket.on('connect', () => {
+            console.log('Connected to SocketIO server');
+        });
+
+        socket.on('video_frame', (data) => {
+            if (canvas.style.display !== 'block') return;
+
+            console.log('Received video_frame:', {
+                frame: data.frame ? data.frame.substring(0, 30) + '...' : 'No frame data',
+                bounding_boxes: data.bounding_boxes
+            });
+
+            if (!data.frame) {
+                console.error('No frame data received');
+                return;
+            }
+
+            const img = new Image();
+            img.onload = () => {
+                try {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    data.bounding_boxes.forEach(box => {
+                        ctx.beginPath();
+                        ctx.rect(box.x, box.y, box.width, box.height);
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = '#10b981';
+                        ctx.stroke();
+                        if (box.name) {
+                            ctx.font = '16px Arial';
+                            ctx.fillStyle = '#10b981';
+                            ctx.fillText(box.name, box.x, box.y - 10);
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error drawing on canvas:', error);
+                }
+            };
+            img.onerror = () => {
+                console.error('Failed to load image');
+                document.getElementById('error').textContent = 'Failed to load webcam feed';
+                document.getElementById('error').style.display = 'block';
+            };
+            img.src = 'data:image/jpeg;base64,' + data.frame;
+        });
+
+        function loginWithFace() {
+            const username = document.getElementById('username').value;
+            if (!username) {
+                document.getElementById('error').textContent = 'Please enter a username';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('videoCanvas').style.display = 'none';
+                return;
+            }
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('videoCanvas').style.display = 'block';
+            fetch('/api/login/face', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username })
+            })
+                .then(response => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('videoCanvas').style.display = 'none';
+                    if (response.ok) {
+                        return response.json().then(data => {
+                            window.location.href = '/';
+                        });
+                    } else {
+                        return response.json().then(data => {
+                            document.getElementById('error').textContent = data.error || 'Face login failed';
+                            document.getElementById('error').style.display = 'block';
+                        });
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('videoCanvas').style.display = 'none';
+                    document.getElementById('error').textContent = 'Error during face login';
+                    document.getElementById('error').style.display = 'block';
+                    console.error('Face login error:', error);
+                });
+        }
+    </script>
+</body>
+</html>

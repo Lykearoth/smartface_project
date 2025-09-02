@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Attendance</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            background: #1a202c;
+            color: #e2e8f0;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        .navbar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: #2d3748;
+            padding: 34px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .logo-title-group {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            gap: 20px;
+        }
+        .logo {
+            margin-right: 20px;
+        }
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+   .logo-title-group {
+  gap: -100px !important; /* space between logo and text */
+}
+        .navbar-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e2e8f0;
+        }
+        .container {
+            width: 100%;
+            min-height: calc(100vh - 60px);
+            margin-top: 60px;
+            padding: 20px;
+        }
+        .card {
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        /* Scrollable table container */
+        .table-container {
+            max-height: 500px; /* Fixed height for the table */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border-radius: 8px;
+            border: 1px solid #4a5568;
+        }
+        
+        /* Table styling */
+        #todayAttendanceTable {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        /* Make header sticky */
+        #todayAttendanceTable thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #4a5568;
+        }
+        th {
+            background: #4a5568;
+            color: #e2e8f0;
+        }
+        tr {
+            background: #3b4756;
+            transition: all 0.3s ease;
+        }
+        tr:hover {
+            background: #718096;
+            transform: translateY(-2px);
+        }
+        
+        /* Action column styling */
+        .action-check-in {
+            color: #68d391;
+        }
+        .action-check-out {
+            color: #d3a868;
+        }
+        
+        .video-canvas {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            width: 100%;
+            height: auto;
+            max-height: 500px; /* Match table height */
+        }
+        .video-canvas:hover {
+            transform: scale(1.02);
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .logo-title-group {
+                position: static;
+                transform: none;
+                flex-direction: column;
+                gap: 10px;
+                margin: 10px 0;
+            }
+            .logo {
+                margin-bottom: 10px;
+            }
+            .navbar-title {
+                margin: 10px 0;
+            }
+            .container {
+                margin-top: 50px;
+                padding: 10px;
+            }
+            .flex-col.md\:flex-row {
+                flex-direction: column;
+            }
+            .w-full.md\:w-1\/2 {
+                width: 100%;
+            }
+            .table-container {
+                max-height: 300px; /* Smaller height on mobile */
+            }
+        }
+         footer {
+            background-color: #1f2937; /* Tailwind bg-gray-800 */
+            color: #d1d5db; /* Tailwind text-gray-300 */
+            padding: 1.5rem 0;
+            margin-top: 2rem; /* Gap from #all-attendance */
+            width: 100%;
+            text-align: center;
+        }
+        footer .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem; /* Increased gap for logo elements */
+            margin-bottom: 1rem;
+        }
+        footer .logo-container img {
+            height: 2.5rem; /* Adjust logo image size */
+            width: auto;
+        }
+        footer .logo-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        footer .footer-content a {
+            color: #60a5fa; /* Tailwind text-blue-400 */
+            margin: 0 0.5rem;
+            text-decoration: none;
+        }
+        footer .footer-content a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            footer .logo-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            footer .footer-content a {
+                display: block;
+                margin: 0.25rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+   <div class="navbar">
+        <!-- Centered logo and title group -->
+        <div class="logo-title-group">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="NUM Logo">
+            </div>
+               <div class="navbar-title" style=" font-family: 'Battambang', 'Noto Sans Khmer', sans-serif; font-size: 25px; ">វិទ្យាល័យជ្រោះប៊ូស្រា</div>
+        </div>
+        
+        <!-- User profile/dropdown section -->
+        <div class="user-profile">
+            <div class="dropdown">
+                <!-- Your dropdown content here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="today-attendance">
+            <h1 class="text-3xl font-bold mb-6"><i class="fas fa-calendar-day mr-2"></i>Today's Attendance</h1>
+            <div class="card">
+                <h2 class="text-xl font-semibold mb-4"> <i class="fas fa-user-check mr-2"></i>Attendance Records</a></h2>
+               
+                <div class="flex flex-col md:flex-row gap-4">
+                    <!-- Attendance Table -->
+                    <div class="w-full md:w-1/2">
+                        <div class="table-container"> <!-- Added scrollable container -->
+                            <table id="todayAttendanceTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Timestamp</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="todayAttendanceBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Webcam Feed with Canvas -->
+                    <div class="w-full md:w-1/2">
+                        <h3 class="text-lg font-semibold mb-2"><i class="fas fa-camera mr-2"></i>Live Webcam Feed</button></h3>
+                        <canvas id="videoCanvas" class="video-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+    <script>
+        const socket = io('http://127.0.0.1:5000');
+        const canvas = document.getElementById('videoCanvas');
+        const ctx = canvas.getContext('2d');
+
+        socket.on('connect', () => {
+            console.log('Connected to SocketIO server');
+        });
+
+        socket.on('connect_error', (error) => {
+            console.error('SocketIO connection error:', error);
+        });
+
+        socket.on('attendance_update', (data) => {
+            console.log('Attendance update:', data);
+            const tbody = document.getElementById('todayAttendanceBody');
+            const row = document.createElement('tr');
+            const timestampWithTz = `${data.timestamp} +07:00`;
+            row.innerHTML = `<td>${data.id}</td><td>${data.name}</td><td>${timestampWithTz}</td><td class="action-${data.action.toLowerCase()}">${data.action}</td>`;
+            row.style.backgroundColor = data.action.toLowerCase() === 'check-out' ? '#d3a868' : '#68d391';
+            row.style.transition = 'background-color 0.5s ease';
+            setTimeout(() => {
+                row.style.backgroundColor = '#3b4756';
+            }, 5000);
+            tbody.prepend(row);
+            fetchTodayAttendance();
+        });
+        
+
+        socket.on('attendance_error', (data) => {
+            console.log('Attendance error:', data);
+            const errorElement = document.createElement('p');
+            errorElement.id = 'attendanceError';
+            errorElement.className = 'text-red-500 text-sm mb-4 text-center';
+            errorElement.textContent = `${data.message || 'Error recording attendance'} (at ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' })})`;
+            const card = document.querySelector('.card');
+            const existingError = card.querySelector('#attendanceError');
+            if (existingError) existingError.remove();
+            card.insertBefore(errorElement, card.querySelector('.flex'));
+            setTimeout(() => {
+                errorElement.remove();
+            }, 10000);
+        });
+
+        socket.on('video_frame', (data) => {
+            console.log('Received video frame with bounding boxes:', data);
+            const img = new Image();
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                if (data.faces) {
+                    data.faces.forEach(face => {
+                        const bbox = face.bbox;
+                        const name = face.name || 'Unknown';
+                        const confidence = face.confidence || 0;
+                        ctx.strokeStyle = 'green';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1]);
+                        ctx.font = '16px Arial';
+                        ctx.fillStyle = 'green';
+                        ctx.fillText(name, bbox[0], bbox[1] - 10);
+                    });
+                }
+            };
+            img.src = `data:image/jpeg;base64,${data.frame}`;
+        });
+
+        function fetchTodayAttendance() {
+            fetch('/api/attendance/today', { credentials: 'include' })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Today attendance data:', data);
+                    const tbody = document.getElementById('todayAttendanceBody');
+                    tbody.innerHTML = '';
+                    if (data.attendance && Array.isArray(data.attendance)) {
+                        data.attendance.forEach(row => {
+                            const tr = document.createElement('tr');
+                            const timestampWithTz = row.timestamp;
+                            tr.innerHTML = `<td>${row.id}</td><td>${row.name}</td><td>${timestampWithTz}</td><td class="action-${row.action.toLowerCase()}">${row.action}</td>`;
+                            tr.style.backgroundColor = row.action.toLowerCase() === 'check-out' ? '#93854b' : '#68934b';
+                            tr.style.transition = 'background-color 1000s ease';
+                            setTimeout(() => {
+                                tr.style.backgroundColor = '#3b4756';
+                            }, 5000);
+                            tbody.appendChild(tr);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="4">No attendance data available</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching today attendance:', error);
+                    const tbody = document.getElementById('todayAttendanceBody');
+                    tbody.innerHTML = '<tr><td colspan="4">Error loading attendance data</td></tr>';
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchTodayAttendance();
+            // Uncommented and fixed dropdown (assumes user ID from Flask)
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            if (dropdown && dropdownContent) {
+                dropdown.addEventListener('click', () => {
+                    dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+                });
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!dropdown.contains(e.target)) {
+                        dropdownContent.style.display = 'none';
+                    }
+                });
+            }
+            // Add refresh button handler
+            const refreshButton = document.createElement('button');
+            refreshButton.textContent = 'Refresh Attendance';
+            refreshButton.className = 'bg-blue-600 text-white px-4 py-2 rounded mb-4';
+            const card = document.querySelector('.card');
+            card.insertBefore(refreshButton, card.querySelector('.flex'));
+            refreshButton.addEventListener('click', fetchTodayAttendance);
+        });
+    </script>
+</body>
+ <footer>
+            <div class="logo-container">
+                  <img src="{{ url_for('static', filename='images/logo.png') }}" alt="NUM Logo">
+                <span class="logo-text" style=" font-family: 'Battambang', 'Noto Sans Khmer', sans-serif";>វិទ្យាល័យជ្រោះប៊ូស្រា</span>
+            </div>
+            <div class="footer-content">
+                <p>
+                    <a href="#dashboard"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a> |
+                    <a href="#dashboard"><i class="fas fa-calendar-day mr-2"></i>Today Attendance</a> |
+                    <a href="#all-employees"><i class="fas fa-user-tie mr-2"></i>All Employees</a> |
+                    <a href="#all-attendance"><i class="fas fa-calendar-alt mr-2"></i>All Attendance</a> |
+                    <a href="/today_attendance"><i class="fas fa-user-check mr-2"></i>User Attendance</a> |
+                    <a href="/setting"><i class="fas fa-cog mr-2"></i>Settings</a>
+                </p>
+                  <p>&copy; Smart Face-Based Attendance System | NUM · Faculty of Information Technology | GEN 30th, Academic Years 2022-2025. All rights reserved.</p>
+            </div>
+        </footer>
+</html>
