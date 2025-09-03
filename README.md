@@ -6,21 +6,21 @@
 # Team Members: Ly Kearoth · Chan Sambath · Phy Phorn
 _Generation 30th, Academic Years 2022–2025._
 
-**Project Configuration Guideline: Smart Face-Based Attendance System** <br>
-_Overview_ <br>
+**Project Configuration Guideline: Smart Face-Based Attendance System** 
+_Overview_ 
 This Smart Face-Based Attendance System uses InsightFace for face detection (RetinaFace/SCRFD) and recognition (ArcFace). real-time check-in/out, attendance search, Excel export, and a dashboard with real-time updates via SocketIO. The frontend uses Tailwind CSS, Font Awesome, Flatpickr, Chart.js, and SocketIO. 
-<br>
-_Prerequisites_ <br>
+
+_Prerequisites_ 
 Hardware: Webcam for face capture.
 Operating System: Windows 10/11 (tested), Linux, or macOS.
 Python Version: Python 3.8–3.13.
 Tools: VS Code (recommended), PowerShell (Windows) or terminal (Linux/macOS).
 Internet: Required for InsightFace model download and CDN access.
 Windows Build Tools (Windows only): Microsoft Visual C++ 14.0+ for compiling InsightFace.
-<br>
-_Setup Instructions_ <br>
+
+_Setup Instructions_ 
 Step 1: Clone or Copy the Project
-Copy the project folder to your machine (e.g., D:\Smart Face-Based Attendance System). <br>
+Copy the project folder to your machine (e.g., D:\Smart Face-Based Attendance System).
 
 Step 2: Install Microsoft Visual C++ Build Tools (Windows Only)
 Download Visual Studio Build Tools.
@@ -129,6 +129,7 @@ Security: Use HTTPS in production for webcam access.
 Performance: Adjust ArcFace similarity threshold (0.45) if needed.
 
 For issues, contact the _project author_ or check logs in app.py.
+
 
 
 
