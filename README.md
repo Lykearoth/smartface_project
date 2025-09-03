@@ -6,7 +6,7 @@
 # Team Members: Ly Kearoth · Chan Sambath · Phy Phorn
 _Generation 30th, Academic Years 2022–2025._
 
-**Project Configuration Guideline: Smart Face-Based Attendance System**
+**Project Configuration Guideline: Smart Face-Based Attendance System** <br>
 _Overview_
 This Smart Face-Based Attendance System uses InsightFace for face detection (RetinaFace/SCRFD) and recognition (ArcFace). real-time check-in/out, attendance search, Excel export, and a dashboard with real-time updates via SocketIO. The frontend uses Tailwind CSS, Font Awesome, Flatpickr, Chart.js, and SocketIO.
 
@@ -129,5 +129,6 @@ Security: Use HTTPS in production for webcam access.
 Performance: Adjust ArcFace similarity threshold (0.45) if needed.
 
 For issues, contact the _project author_ or check logs in app.py.
+
 
 
