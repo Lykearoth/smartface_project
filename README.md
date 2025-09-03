@@ -8,8 +8,8 @@ _Generation 30th, Academic Years 2022–2025._
 
 **Project Configuration Guideline: Smart Face-Based Attendance System** <br>
 _Overview_
-This Smart Face-Based Attendance System uses InsightFace for face detection (RetinaFace/SCRFD) and recognition (ArcFace). real-time check-in/out, attendance search, Excel export, and a dashboard with real-time updates via SocketIO. The frontend uses Tailwind CSS, Font Awesome, Flatpickr, Chart.js, and SocketIO.
-
+This Smart Face-Based Attendance System uses InsightFace for face detection (RetinaFace/SCRFD) and recognition (ArcFace). real-time check-in/out, attendance search, Excel export, and a dashboard with real-time updates via SocketIO. The frontend uses Tailwind CSS, Font Awesome, Flatpickr, Chart.js, and SocketIO. 
+<br>
 _Prerequisites_
 Hardware: Webcam for face capture.
 Operating System: Windows 10/11 (tested), Linux, or macOS.
@@ -17,7 +17,7 @@ Python Version: Python 3.8–3.13.
 Tools: VS Code (recommended), PowerShell (Windows) or terminal (Linux/macOS).
 Internet: Required for InsightFace model download and CDN access.
 Windows Build Tools (Windows only): Microsoft Visual C++ 14.0+ for compiling InsightFace.
-
+<br>
 _Setup Instructions_
 Step 1: Clone or Copy the Project
 Copy the project folder to your machine (e.g., D:\Smart Face-Based Attendance System).
@@ -72,9 +72,9 @@ conn.close()
 
 Run in PowerShell: python -c "import sqlite3; conn = sqlite3.connect('attendance.db'); cursor = conn.cursor(); cursor.execute('CREATE TABLE IF NOT EXISTS employees (id TEXT PRIMARY KEY, name TEXT, embedding BLOB)'); cursor.execute('CREATE TABLE IF NOT EXISTS attendance (id TEXT, status TEXT, timestamp DATETIME, action TEXT)'); conn.commit(); conn.close()"
 
+<br>
 
-
-Step 8: Run the Application
+_Step 8: Run the Application_
 Navigate to the project folder: cd "D:\Smart Face-Based Attendance System\smartface_project"
 
 Run the Flask app: python app.py (Web Access)
@@ -129,6 +129,7 @@ Security: Use HTTPS in production for webcam access.
 Performance: Adjust ArcFace similarity threshold (0.45) if needed.
 
 For issues, contact the _project author_ or check logs in app.py.
+
 
 
 
