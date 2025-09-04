@@ -83,6 +83,7 @@ Navigate to the project folder: cd "D:\Smart Face-Based Attendance System\smartf
 
 Run the Flask app: python app.py (Web Access)
   -> Access at http://127.0.0.1:5000 (Ctr+Click) in a browser.
+  -> Login (User: admin / Password: 123)
   
 Run the Flask app: face_attendance_insightface.py (Device Side! for Attendance Record)
   -> 1. Register a new face (user or employee)
@@ -135,6 +136,7 @@ Performance: Adjust ArcFace similarity threshold (0.45) if needed.
 Attention: This applications, especially in AI, deep learning, video processing, and scientific computing, can benefit from _GPU_ acceleration.
 
 For issues, contact the _project author_ or check logs in app.py.
+
 
 
 
